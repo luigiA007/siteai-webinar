@@ -1,0 +1,4 @@
+_build
+DEPLOY_COOLIFY.md
+.git
+*.tar.gz

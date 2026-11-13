@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteAI Intelligence Brief · Sample</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+/* SiteAI Intelligence Brief: sample design for Bernd (v1, 2026-11-13).
+   Two views of the same record: the email that lands in the agent's inbox, and the full brief it links to.
+   Brand: Agent Image (Montserrat, teal #009BBB, navy #0E3E5D). Readiness colours: Exploring grey, Warm amber, Ready green. */
+:root{--ink:#131314;--ink2:#3b3f45;--grey:#6B7073;--rule:#E3E6E7;--mist:#F4F5F6;--paper:#fff;--teal:#009BBB;--sky:#44BFE2;--navy:#0E3E5D;--orange:#F4870C;
+  --ready:#16A34A;--ready-soft:#E8F7EE;--warm:#D97706;--warm-soft:#FEF3E2;--explore:#6B7280;--explore-soft:#EEF0F2;
+  --sans:"Montserrat",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:#E9ECEE;color:var(--ink);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--teal)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+h1,h2,h3,p{margin:0}
+
+/* top bar (not part of the brief itself) */
+.bar{position:sticky;top:0;z-index:5;background:#0b1230;color:#fff;display:flex;align-items:center;gap:16px;padding:12px max(16px,3vw);flex-wrap:wrap}
+.bar b{font:600 12px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.bar .tag{font:600 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.14);border-radius:4px;padding:5px 7px}
+.seg{margin-left:auto;display:flex;background:rgba(255,255,255,.1);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:rgba(255,255,255,.75);font:600 12px/1 var(--sans);letter-spacing:.06em;padding:9px 16px;border-radius:999px}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink)}
+.embed .bar{display:none}
+
+.view{padding:clamp(16px,3vw,40px) max(12px,3vw) 60px}
+.view[hidden]{display:none}
+
+/* ---------- shared pieces ---------- */
+.lbl{font:600 11px/1.2 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--grey)}
+.pill{display:inline-flex;align-items:center;gap:6px;font:700 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:7px 11px}
+.pill.ready{background:var(--ready-soft);color:var(--ready)}
+.pill.ready::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ready);box-shadow:0 0 0 3px rgba(22,163,74,.18)}
+.meter{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;flex:1;min-width:120px}
+.meter i{height:6px;border-radius:3px;background:var(--rule)}
+.meter.ready i{background:var(--ready)}
+.facts{display:flex;flex-wrap:wrap;gap:8px}
+.fact{background:var(--mist);border-radius:8px;padding:8px 11px;min-width:0}
+.fact small{display:block;font:600 9.5px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:3px}
+.fact b{font:600 13.5px/1.3 var(--sans)}
+.quote{border-left:3px solid var(--teal);padding:2px 0 2px 12px;font:500 17px/1.4 var(--serif);color:var(--ink);margin:0 0 10px}
+.quote:last-child{margin-bottom:0}
+.rows{display:grid;gap:8px}
+.r{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.r span:last-child{color:var(--grey);white-space:nowrap;font-size:13px}
+.next{background:var(--ink);color:#fff;border-radius:12px;padding:16px 18px}
+.next .lbl{color:var(--sky);margin-bottom:8px}
+.next p{font:500 15px/1.55 var(--sans)}
+.next p q{font-style:italic;color:#fff}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.b1,.b2{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 18px;border-radius:999px;font:600 13px/1 var(--sans);text-decoration:none;border:0}
+.b1{background:var(--teal);color:#fff}
+.b2{background:#fff;color:var(--teal);box-shadow:inset 0 0 0 1.5px var(--teal)}
+.handled li{margin-bottom:8px}
+.handled b{font-weight:600}
+.fh{display:inline-block;font:700 9.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:#E5F6F9;border-radius:4px;padding:4px 6px;margin-left:4px;vertical-align:1px}
+ul.clean{list-style:none;margin:0;padding:0}
+
+/* ---------- EMAIL VIEW (what lands in the inbox) ---------- */
+.mail{max-width:640px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 0 var(--rule),0 24px 50px rgba(14,62,93,.14)}
+.mail-h{padding:20px 24px 16px;border-bottom:1px solid var(--rule)}
+.mail-h h1{font:600 19px/1.3 var(--sans);letter-spacing:-.005em}
+.mail-h .from{display:flex;justify-content:space-between;gap:12px;margin-top:6px;font-size:13px;color:var(--grey)}
+.sec{padding:16px 24px;border-bottom:1px solid var(--rule)}
+.sec .lbl{margin-bottom:10px}
+.status{display:flex;align-items:center;gap:14px}
+.why{font-size:13px;color:var(--grey);margin-top:10px}
+.who b{font:600 18px/1.3 var(--sans)}
+.who p{font-size:14px;color:var(--ink2);margin-top:4px}
+.two{display:grid;grid-template-columns:1fr 1fr}
+.two>.sec+.sec{border-left:1px solid var(--rule)}
+.mail-f{padding:14px 24px 18px;font-size:11.5px;line-height:1.5;color:var(--grey);background:var(--mist)}
+@media (max-width:600px){.two{grid-template-columns:1fr}.two>.sec+.sec{border-left:0}.mail-h,.sec,.mail-f{padding-left:16px;padding-right:16px}}
+
+/* ---------- FULL BRIEF VIEW ---------- */
+.full{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+.card{background:#fff;border-radius:14px;box-shadow:0 1px 0 var(--rule),0 10px 30px rgba(14,62,93,.08);padding:20px 22px}
+.card+.card{margin-top:16px}
+.card h2{font:600 13px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hero{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(49deg,#01B5C5,#271B84);color:#fff;display:grid;place-items:center;font:700 19px/1 var(--sans);flex:none}
+.hero>div:not(.right){flex:1;min-width:240px}
+.hero h1{font:600 26px/1.15 var(--sans);letter-spacing:-.01em}
+.hero .sub{color:var(--ink2);margin-top:6px;font-size:14.5px}
+.hero .contact{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:14px}
+.hero .right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.score{display:flex;align-items:center;gap:10px;width:220px}
+.signals{display:grid;gap:8px;margin-top:4px}
+.signals div{display:flex;gap:10px;align-items:baseline;font-size:14px}
+.signals div::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--ready);transform:translateY(-1px)}
+.signals div.w::before{background:var(--warm)}
+.listing{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--rule)}
+.listing:first-of-type{border-top:0}
+.listing .ph{height:76px;border-radius:8px;background:var(--mist) center/cover}
+.listing b{display:block;font-weight:600}
+.listing small{color:var(--grey);font-size:12.5px}
+.listing .eng{text-align:right;font-size:12.5px;color:var(--grey);white-space:nowrap}
+.listing .eng b{color:var(--ink);font-size:14px}
+.tl{position:relative;display:grid;gap:12px;padding-left:18px}
+.tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:2px;background:var(--rule)}
+.tl div{position:relative;font-size:14px}
+.tl div::before{content:"";position:absolute;left:-18px;top:6px;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 2px var(--teal)}
+.tl time{font:600 12px/1 var(--sans);color:var(--grey);margin-right:8px;font-variant-numeric:tabular-nums}
+.chat{display:grid;gap:10px;max-height:560px;overflow:auto;padding-right:4px}
+.m{max-width:85%;border-radius:14px;padding:10px 13px;font-size:14px;line-height:1.5}
+.m.v{justify-self:end;background:var(--teal);color:#fff;border-bottom-right-radius:4px}
+.m.a{background:var(--mist);border-bottom-left-radius:4px}
+.m small{display:block;font:600 10px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:4px}
+.m .page{display:block;margin-top:6px;font:600 11.5px/1.3 var(--sans);color:var(--teal)}
+.m.fhm{box-shadow:inset 0 0 0 1.5px var(--teal);background:#F2FBFD}
+.crm{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px}
+.crm dt{color:var(--grey)}
+.crm dd{margin:0;font-weight:500}
+.note{font-size:12.5px;color:var(--grey);line-height:1.5}
+@media (max-width:980px){.full{grid-template-columns:minmax(0,1fr)}.hero .right{margin-left:0;align-items:flex-start}}
+@media (max-width:560px){.listing{grid-template-columns:84px minmax(0,1fr)}.listing .eng{grid-column:2;text-align:left}.listing .ph{height:60px}}
+.meter.ready i{transform-origin:left center}
+@media (prefers-reduced-motion:no-preference){.meter.ready i{animation:fillIn .5s cubic-bezier(.2,.7,.2,1) both}.meter.ready i:nth-child(2){animation-delay:.35s}.meter.ready i:nth-child(3){animation-delay:.7s}}
+@keyframes fillIn{from{transform:scaleX(0)}to{transform:none}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>SiteAI Intelligence Brief</b><span class="tag">Sample · fictional visitor</span>
+  <div class="seg" role="group" aria-label="View">
+    <button type="button" data-v="email" aria-pressed="true">In your inbox</button>
+    <button type="button" data-v="full" aria-pressed="false">Full brief</button>
+  </div>
+</div>
+
+<!-- ============ EMAIL VIEW ============ -->
+<main class="view" id="v-email">
+<article class="mail" aria-label="Intelligence brief email">
+  <header class="mail-h">
+    <h1>Ready · Taylor Brooks wants to see 200 Klee Court on Saturday</h1>
+    <div class="from"><span>From: SiteAI for Radiance Luxury Real Estate · To: Liam Anderson</span><span>9:47 PM</span></div>
+  </header>
+
+  <section class="sec">
+    <div class="status"><span class="pill ready">Ready</span><span class="meter ready" aria-label="Readiness: Ready, 3 of 3"><i></i><i></i><i></i></span></div>
+    <p class="why">Asked for a private showing and shared a phone number · 12 messages, 9:31 to 9:47 PM · came from a Google search · second visit this week</p>
+  </section>
+
+  <section class="sec who">
+    <p class="lbl">Visitor</p>
+    <b>Taylor Brooks</b>
+    <p>(916) 555-0193 · prefers text after 6 PM · taylor.brooks@example.com</p>
+  </section>
+
+  <section class="sec">
+    <p class="lbl">What they want</p>
+    <div class="facts">
+      <div class="fact"><small>Looking to</small><b>Buy</b></div>
+      <div class="fact"><small>Areas</small><b>El Dorado Hills, Folsom</b></div>
+      <div class="fact"><small>Price range</small><b>$8M to $11M</b></div>
+      <div class="fact"><small>Must-haves</small><b>4+ bd · private lot · home office</b></div>
+      <div class="fact"><small>Timeline</small><b>Within 6 months</b></div>
+      <div class="fact"><small>Financing</small><b>Cash (their words)</b></div>
+      <div class="fact"><small>Getting around</small><b>Downtown Sacramento, 3 days a week</b></div>
+    </div>
+  </section>
+
+  <div class="two">
+    <section class="sec">
+      <p class="lbl">What they looked at</p>
+      <div class="rows">
+        <div class="r"><span>200 Klee Court</span><span>4 views · 5 min</span></div>
+        <div class="r"><span>2020 Kaila Way</span><span>1 view · 1 min</span></div>
+        <div class="r"><span>Commute from Klee Court</span><span>answer page</span></div>
+        <div class="r"><span>El Dorado Hills</span><span>community</span></div>
+      </div>
+    </section>
+    <section class="sec">
+      <p class="lbl">In their words</p>
+      <p class="quote">"I'm downtown three days a week, so the drive matters more than the square footage."</p>
+      <p class="quote">"Is the Klee Court lot private from the street?"</p>
+    </section>
+  </div>
+
+  <div class="two">
+    <section class="sec">
+      <p class="lbl">Shared with them</p>
+      <ul class="clean rows" style="font-size:14px">
+        <li>Drive-time estimates from Klee Court: downtown, Folsom, the airport</li>
+        <li>El Dorado Hills at a glance, from your community page</li>
+      </ul>
+    </section>
+    <section class="sec">
+      <p class="lbl">Handled for you</p>
+      <ul class="clean handled" style="font-size:14px">
+        <li>Asked what kind of people live nearby · described the area, not the people <span class="fh">Fair Housing</span></li>
+        <li>Asked about property taxes · gave general information and suggested a tax professional</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="sec">
+    <div class="next">
+      <p class="lbl">Suggested next step</p>
+      <p>Text Taylor tonight to confirm Saturday at 10 AM at 200 Klee Court. Open with: <q>You said the drive matters most. Klee Court runs about 35 minutes to downtown off-peak. I'll show you the route before we walk the house.</q></p>
+    </div>
+  </section>
+
+  <section class="sec" style="border-bottom:0">
+    <div class="acts"><a class="b1" href="#full">Confirm Saturday</a><a class="b2" href="sms:+19165550193">Text Taylor</a><a class="b2" href="tel:+19165550193">Call</a><a class="b2" href="#full" data-go="full">Open full brief</a></div>
+  </section>
+
+  <footer class="mail-f">Taylor chose to share these details with Liam Anderson at 9:46 PM. A brief contains only what the visitor shared and what they did on your website. It never records protected characteristics. SiteAI is AI and can make mistakes, so check the details before you call. Sample brief: Taylor Brooks is fictional, and 555 numbers are not real.</footer>
+</article>
+</main>
+
+<!-- ============ FULL BRIEF VIEW ============ -->
+<main class="view" id="v-full" hidden>
+<div class="full">
+  <div>
+    <section class="card">
+      <div class="hero">
+        <span class="avatar" aria-hidden="true">TB</span>
+        <div>
+          <h1>Taylor Brooks</h1>
+          <p class="sub">Wants to see 200 Klee Court on Saturday · buying in El Dorado Hills or Folsom, $8M to $11M, within 6 months</p>
+          <div class="contact"><a href="tel:+19165550193">(916) 555-0193</a><span>Prefers text after 6 PM</span><a href="mailto:taylor.brooks@example.com">taylor.brooks@example.com</a></div>
+        </div>
+        <div class="right">
+          <span class="pill ready">Ready</span>
+          <div class="score"><span class="meter ready"><i></i><i></i><i></i></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Why "Ready"</h2>
+      <div class="signals">
+        <div>Asked for a private showing ("Can I see it this weekend?")</div>
+        <div>Shared a phone number and a best time to reach them</div>
+        <div>Gave a price range, timeline and financing in their own words</div>
+        <div class="w">Second visit this week (first visit: Monday, 3 pages, no conversation)</div>
+      </div>
+      <p class="note" style="margin-top:12px">Ready = asked to see a home, get a value review or talk now. Warm = shared goals or contact details but no request yet. Exploring = browsing and asking general questions.</p>
+    </section>
+
+    <section class="card">
+      <h2>What they looked at <span class="lbl" style="letter-spacing:.1em">From your featured listings</span></h2>
+      <div class="listing"><span class="ph" style="background-image:url(../img/brief_listing1.jpg)"></span><div><b>200 Klee Court, El Dorado Hills</b><small>$10,900,000 · 4 bd · 10,588 sq ft</small></div><div class="eng"><b>4 views · 5 min</b><br>asked about privacy and the commute</div></div>
+      <div class="listing"><span class="ph" style="background-image:url(../img/brief_listing2.jpg)"></span><div><b>2020 Kaila Way, El Dorado Hills</b><small>$8,900,000 · 5 bd · 6,645 sq ft</small></div><div class="eng"><b>1 view · 1 min</b><br>from "the most expensive" list</div></div>
+      <p class="note" style="margin-top:10px">Worth bringing up, if their range is flexible: 2155 Salmon Valley Ln, El Dorado Hills ($5,950,000, 6 bd). SiteAI didn't show it, because they asked to stay above $8M.</p>
+    </section>
+
+    <section class="card">
+      <h2>The conversation <span class="lbl" style="letter-spacing:.1em">12 messages · Thu 9:31 to 9:47 PM</span></h2>
+      <div class="chat">
+        <div class="m v"><small>Taylor</small>Show me the most expensive one</div>
+        <div class="m a"><small>SiteAI as "Ask Liam"</small>Here's the detail, on the right. 200 Klee Court, $10,900,000, four bedrooms on a large El Dorado Hills lot.<span class="page">Answer page: 200 Klee Court</span></div>
+        <div class="m v"><small>Taylor</small>How's the commute from 200 Klee Court to downtown Sacramento? I'm downtown three days a week, so the drive matters more than the square footage.</div>
+        <div class="m a"><small>SiteAI</small>About 35 minutes to downtown outside rush hour, 45 to 60 at peak. The breakdown is on the right. Drive times are estimates and change with traffic.<span class="page">Answer page: Commute from Klee Court</span></div>
+        <div class="m v"><small>Taylor</small>Is the Klee Court lot private from the street?</div>
+        <div class="m a"><small>SiteAI</small>The listing doesn't say, so I won't guess. That's a good one to see in person, and I've noted it for Liam.</div>
+        <div class="m v"><small>Taylor</small>What are the people like in that neighborhood? Would we fit in?</div>
+        <div class="m a fhm"><small>SiteAI · Fair Housing guardrail</small>I can't describe a neighborhood by who lives there, but I can tell you what's around it: the trails, the town center and the drive times. Here's El Dorado Hills at a glance.<span class="page">Answer page: El Dorado Hills</span></div>
+        <div class="m v"><small>Taylor</small>Roughly what are property taxes on a house like this?</div>
+        <div class="m a"><small>SiteAI</small>In California they're generally based on the purchase price plus local assessments. For an exact figure, a tax professional or the county assessor is the right source, and Liam can point you to the listing's tax records.</div>
+        <div class="m v"><small>Taylor</small>Can I see it this weekend? We're paying cash, budget is 8 to 11 million, and we'd want to move within six months. Text me at 916-555-0193, after 6 is best.</div>
+        <div class="m a"><small>SiteAI</small>Thank you, Taylor. I've passed this to Liam with what you've told me, so you won't have to repeat yourself. He'll text you to confirm a time on Saturday.</div>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <section class="card">
+      <h2>Suggested next step</h2>
+      <div class="next"><p>Text Taylor tonight to confirm Saturday at 10 AM at 200 Klee Court. Open with: <q>You said the drive matters most. Klee Court runs about 35 minutes to downtown off-peak. I'll show you the route before we walk the house.</q></p></div>
+      <div class="acts" style="margin-top:14px"><a class="b1" href="sms:+19165550193">Text Taylor</a><a class="b2" href="tel:+19165550193">Call</a><a class="b2" href="#">Mark contacted</a></div>
+    </section>
+
+    <section class="card">
+      <h2>What they want</h2>
+      <div class="facts">
+        <div class="fact"><small>Looking to</small><b>Buy</b></div>
+        <div class="fact"><small>Areas</small><b>El Dorado Hills, Folsom</b></div>
+        <div class="fact"><small>Price range</small><b>$8M to $11M</b></div>
+        <div class="fact"><small>Must-haves</small><b>4+ bd · private lot · home office</b></div>
+        <div class="fact"><small>Timeline</small><b>Within 6 months</b></div>
+        <div class="fact"><small>Financing</small><b>Cash (their words)</b></div>
+        <div class="fact"><small>Getting around</small><b>Downtown, 3 days a week</b></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>The visit</h2>
+      <div class="tl">
+        <div><time>Mon</time>First visit · 3 pages · no conversation</div>
+        <div><time>9:29 PM</time>Arrived from Google: "el dorado hills luxury homes"</div>
+        <div><time>9:31 PM</time>Opened "Ask Liam" from the home page</div>
+        <div><time>9:34 PM</time>Commute answer page</div>
+        <div><time>9:40 PM</time>Fair Housing guardrail applied</div>
+        <div><time>9:46 PM</time>Shared contact details, asked for a showing</div>
+        <div><time>9:47 PM</time>Brief sent to Liam</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Ready for your CRM</h2>
+      <dl class="crm">
+        <dt>Name</dt><dd>Taylor Brooks</dd>
+        <dt>Phone</dt><dd>(916) 555-0193</dd>
+        <dt>Email</dt><dd>taylor.brooks@example.com</dd>
+        <dt>Stage</dt><dd>Ready · showing requested</dd>
+        <dt>Source</dt><dd>SiteAI · Google search</dd>
+        <dt>Tags</dt><dd>buyer, el-dorado-hills, cash, 8-11m</dd>
+        <dt>Note</dt><dd>The full brief, linked</dd>
+      </dl>
+      <p class="note" style="margin-top:10px">Every brief arrives by email. Which CRMs it also goes to is covered in your presentation.</p>
+    </section>
+
+    <section class="card">
+      <h2>Privacy</h2>
+      <p class="note">Taylor chose to share contact details at 9:46 PM, after being told they go to Liam Anderson. The brief holds only what the visitor shared and what they did on this website: no protected characteristics, no data from other sites. The visitor can ask for it to be deleted.</p>
+    </section>
+  </aside>
+</div>
+</main>
+
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  if (q.get('embed')) document.documentElement.classList.add('embed');
+  var btns = document.querySelectorAll('.seg button');
+  function show(v){
+    document.getElementById('v-email').hidden = v !== 'email';
+    document.getElementById('v-full').hidden = v !== 'full';
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-v') === v ? 'true' : 'false'); });
+    window.scrollTo(0,0);
+  }
+  btns.forEach(function(b){ b.addEventListener('click', function(){ show(b.getAttribute('data-v')); }); });
+  document.querySelectorAll('[data-go="full"], a[href="#full"]').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); show('full'); }); });
+  show(q.get('view') === 'full' || location.hash === '#full' ? 'full' : 'email');
+})();
+</script>
+</body>
+</html>
